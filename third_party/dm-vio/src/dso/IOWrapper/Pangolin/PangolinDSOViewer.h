@@ -25,6 +25,8 @@
 
 
 #pragma once
+#define GL_GLEXT_PROTOTYPES
+// #include <GL/gl.h>
 #include <pangolin/pangolin.h>
 #include "boost/thread.hpp"
 #include "util/MinimalImage.h"
@@ -83,7 +85,7 @@ public:
     virtual void publishCamPose(FrameShell* frame, CalibHessian* HCalib) override;
     virtual void publishSystemStatus(dmvio::SystemStatus systemStatus) override;
 
-    void addGTCamPose(const Sophus::SE3& gtPose);
+    void addGTCamPose(const Sophus::SE3d& gtPose);
 
     virtual void pushLiveFrame(FrameHessian* image) override;
     virtual void pushDepthImage(MinimalImageB3* image) override;

@@ -28,7 +28,7 @@
 #include "IMUSettings.h"
 #include "BAIMULogic.h"
 
-#include <sophus/sophus.hpp>
+// #include <sophus/so3.hpp>
 #include <sophus/se3.hpp>
 #include <gtsam/nonlinear/LinearContainerFactor.h>
 #include <dso/util/NumType.h>

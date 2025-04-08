@@ -233,7 +233,7 @@ void dmvio::BAIMULogic::setNextBAVel(const gtsam::Vector3& velocity, int frameId
 }
 
 void dmvio::BAIMULogic::addKeyframe(BAGraphs* baGraphs, gtsam::Values::shared_ptr baValues, int keyframeId,
-                                    const Sophus::SE3& keyframePose, std::vector<dso::EFFrame*>& frames)
+                                    const Sophus::SE3d& keyframePose, std::vector<dso::EFFrame*>& frames)
 {
     if(disableFromKF > 0 && keyframeId > disableFromKF)
     {

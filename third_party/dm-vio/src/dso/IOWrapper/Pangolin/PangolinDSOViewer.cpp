@@ -628,7 +628,7 @@ void PangolinDSOViewer::publishSystemStatus(dmvio::SystemStatus systemStatus)
     this->systemStatus = systemStatus;
 }
 
-void PangolinDSOViewer::addGTCamPose(const Sophus::SE3& gtPose)
+void PangolinDSOViewer::addGTCamPose(const Sophus::SE3d& gtPose)
 {
 	boost::unique_lock<boost::mutex> lk(model3DMutex);
 

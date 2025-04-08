@@ -30,16 +30,18 @@ ENDIF ()
 
 # optional libraries
 find_package(LibZip QUIET)
-#find_package(Pangolin 0.2 QUIET)
-set(Pangolin_FOUND 1)
-add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/Pangolin)
-set(Pangolin_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/thirdparty/Pangolin/include
-        ${PROJECT_SOURCE_DIR}/thirdparty/Pangolin/src)
-set(Pangolin_LIBRARIES pangolin)
+find_package(Pangolin REQUIRED)
+#set(Pangolin_FOUND 1)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/Pangolin)
+#set(Pangolin_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/thirdparty/Pangolin/include
+#        ${PROJECT_SOURCE_DIR}/thirdparty/Pangolin/src)
+#set(Pangolin_LIBRARIES pangolin)
 #set(Pangolin_LIBRARIES ${PROJECT_SOURCE_DIR}/thirdparty/Pangolin/build/src/libpangolin.so)
 
 find_package(OpenCV QUIET)
-
+find_package(Sophus REQUIRED)
+find_package(fmt REQUIRED)
+find_package(GLEW REQUIRED)
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     MESSAGE(Mac OS X specific code)
@@ -52,16 +54,16 @@ ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 add_definitions("-DENABLE_SSE")
 set(CMAKE_CXX_FLAGS
         "${SSE_FLAGS}"
-        )
+)
 set(CMAKE_CXX_FLAGS_DEBUG
         "-O2 -g -fno-omit-frame-pointer -DEIGEN_INITIALIZE_MATRICES_WITH_NAN -DDEBUG ${STACKTRACE_DEFINES}"
-        )
+)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
         "-O3 -g -fno-omit-frame-pointer ${STACKTRACE_DEFINES}"
-        )
+)
 set(CMAKE_CXX_FLAGS_RELEASE
         "-O3 -DNDEBUG"
-        )
+)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -91,7 +93,7 @@ set(dso_SOURCE_FILES
         ${DSO_SOURCE_DIR}/util/settings.cpp
         ${DSO_SOURCE_DIR}/util/Undistort.cpp
         ${DSO_SOURCE_DIR}/util/globalCalib.cpp
-        )
+)
 
 set(dmvio_SOURCE_FILES
         src/IMU/IMUIntegration.cpp
@@ -125,16 +127,17 @@ set(dmvio_SOURCE_FILES
         src/util/MainSettings.cpp
         src/live/FrameSkippingStrategy.cpp
         src/live/DatasetSaver.cpp
-        )
+)
 
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/src/dso
-        ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
+        #        ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
         ${PROJECT_SOURCE_DIR}/thirdparty/sse2neon
         ${EIGEN3_INCLUDE_DIR}
         ${GTSAM_INCLUDE_DIR}
+        ${Sophus_INCLUDE_DIRS}
 )
 
 
@@ -184,7 +187,10 @@ endif ()
 # compile main library.
 include_directories(${CSPARSE_INCLUDE_DIR} ${CHOLMOD_INCLUDE_DIR} ${YAML_CPP_INCLUDE_DIR})
 add_library(dmvio ${dso_SOURCE_FILES} ${dmvio_SOURCE_FILES} ${dso_opencv_SOURCE_FILES} ${dso_pangolin_SOURCE_FILES})
-
+target_link_libraries(dmvio PRIVATE
+        Sophus::Sophus
+        GLEW::GLEW
+)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # OSX
     set(BOOST_THREAD_LIBRARY boost_thread-mt)
@@ -198,7 +204,10 @@ if (OpenCV_FOUND AND Pangolin_FOUND)
     message("--- compiling dmvio_dataset.")
     add_executable(dmvio_dataset ${PROJECT_SOURCE_DIR}/src/main_dmvio_dataset.cpp)
     set(DMVIO_LINKED_LIBRARIES boost_system cxsparse ${BOOST_THREAD_LIBRARY} ${LIBZIP_LIBRARY} ${Pangolin_LIBRARIES} ${OpenCV_LIBS} gtsam ${YAML_CPP_LIBRARIES} ${STACKTRACE_LIBRARIES})
-    target_link_libraries(dmvio_dataset dmvio ${DMVIO_LINKED_LIBRARIES})
+    target_link_libraries(dmvio_dataset dmvio
+            ${DMVIO_LINKED_LIBRARIES}
+            fmt::fmt
+    )
 
     if (realsense2_FOUND)
         message("--- compiling dmvio_t265.")

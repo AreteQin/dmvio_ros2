@@ -31,6 +31,8 @@
 //#include <GL/glx.h>
 //#include <GL/gl.h>
 //#include <GL/glu.h>
+// --- Must come BEFORE any Pangolin OpenGL headers ---
+#include <GL/glew.h> // Or <glad/glad.h> if using GLAD
 
 #include <pangolin/pangolin.h>
 #include "KeyFrameDisplay.h"
@@ -84,7 +86,7 @@ void KeyFrameDisplay::setFromF(FrameShell* frame, CalibHessian* HCalib)
 	needRefresh=true;
 }
 
-void KeyFrameDisplay::setFromPose(const Sophus::SE3& pose, CalibHessian *HCalib)
+void KeyFrameDisplay::setFromPose(const Sophus::SE3d& pose, CalibHessian *HCalib)
 {
 	id = 0;
 	fx = HCalib->fxl();

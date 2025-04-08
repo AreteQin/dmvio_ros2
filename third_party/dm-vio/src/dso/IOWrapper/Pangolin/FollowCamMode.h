@@ -22,7 +22,10 @@
 
 #ifndef DMVIO_FOLLOWCAMMODE_H
 #define DMVIO_FOLLOWCAMMODE_H
-
+// --- Must come BEFORE any Pangolin OpenGL headers ---
+// #include <GL/glew.h> // Or <glad/glad.h> if using GLAD
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #include <pangolin/pangolin.h>
 #include <sophus/se3.hpp>
 

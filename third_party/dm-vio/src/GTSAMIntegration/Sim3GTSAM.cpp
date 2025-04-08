@@ -71,7 +71,7 @@ ScaleGTSAM ScaleGTSAM::inverse() const
 
 gtsam::Vector1 ScaleGTSAM::Logmap(const ScaleGTSAM& s, gtsam::OptionalJacobian<1, 1> Hm)
 {
-    Sophus::Sim3d::Tangent tangent = Sophus::Sim3d::log(s.sim());
+    Sophus::Sim3d::Tangent tangent = s.sim().log();
     gtsam::Vector1 ret;
     ret(0) = tangent(6);
     return ret;

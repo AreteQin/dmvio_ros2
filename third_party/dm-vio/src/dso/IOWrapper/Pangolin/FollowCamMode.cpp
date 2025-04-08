@@ -43,7 +43,7 @@ FollowCamMode::updateVisualizationCam(const Sophus::SE3d& camToWorldIn, pangolin
     output.SetProjectionMatrix(renderStateIn.GetProjectionMatrix());
 
     auto&& modelViewIn = renderStateIn.GetModelViewMatrix();
-    Sophus::SE3d T_pcam_world(modelViewIn); // world to Pangolin-Cam.
+    Sophus::SE3d T_pcam_world(Eigen::Matrix4d(modelViewIn)); // world to Pangolin-Cam.
 
     Sophus::SE3d output_cam_w;
 
@@ -76,7 +76,16 @@ FollowCamMode::updateVisualizationCam(const Sophus::SE3d& camToWorldIn, pangolin
             // Activate follow cam --> set offset!
             setOffsetForFollowCam(camToWorld);
         }
-        output_cam_w = T_pcam_world * currOffset * camToWorld.inverse();
+        // output_cam_w = T_pcam_world * currOffset * camToWorld.inverse();
+        // convert modelViewIn to Sophus::SE3d
+        Sophus::SE3d modelViewIn_Sophus;
+        for (int r = 0; r < 4; ++r) {
+            for (int c = 0; c < 4; ++c) {
+                // OpenGlMatrix stores elements in column-major order.
+                modelViewIn_Sophus.matrix()(r, c) = modelViewIn.m[c * 4 + r];
+            }
+        }
+        output_cam_w = modelViewIn_Sophus * currOffset * camToWorld.inverse();
     }else
     {
         if(followActive)
@@ -84,10 +93,22 @@ FollowCamMode::updateVisualizationCam(const Sophus::SE3d& camToWorldIn, pangolin
             // Disable follow cam --> set offset!
             disableOffsetForFollowCam(camToWorld);
         }
-        output_cam_w = T_pcam_world * currOffset;
+        // convert modelViewIn to Sophus::SE3d
+        Sophus::SE3d modelViewIn_Sophus;
+        for (int r = 0; r < 4; ++r) {
+            for (int c = 0; c < 4; ++c) {
+                // OpenGlMatrix stores elements in column-major order.
+                modelViewIn_Sophus.matrix()(r, c) = modelViewIn.m[c * 4 + r];
+            }
+        }
+        output_cam_w = modelViewIn_Sophus * currOffset;
     }
 
-    output.SetModelViewMatrix(output_cam_w.matrix());
+    // convert output_cam_w to pangolin::OpenGlMatrix
+    pangolin::OpenGlMatrix output_cam_w_Opengl;
+    std::copy(output_cam_w.data(), output_cam_w.data() + 16, output_cam_w_Opengl.m);
+
+    output.SetModelViewMatrix(output_cam_w_Opengl);
 
     followActive = followCam;
     transActive = transOnly;

@@ -47,8 +47,8 @@ void IMUCalibration::initDefault()
     Eigen::Matrix3d m;
     Eigen::Vector3d p;
     m << 0.0148655429818, -0.999880929698, 0.00414029679422,
-            0.999557249008, 0.0149672133247, 0.025715529948,
-            -0.0257744366974, 0.00375618835797, 0.999660727178;
+        0.999557249008, 0.0149672133247, 0.025715529948,
+        -0.0257744366974, 0.00375618835797, 0.999660727178;
     p << -0.0216401454975, -0.064676986768, 0.00981073058949;
 
     Sophus::SE3d imu_cam(m, p);
@@ -66,18 +66,18 @@ void IMUCalibration::registerArgs(dmvio::SettingsUtil& set)
 
 void IMUCalibration::loadFromFile(std::string settingsFilename)
 {
-    if(settingsFilename == "")
+    if (settingsFilename == "")
     {
         return;
     }
 
     std::cout << "Loading IMU parameter file at: " << settingsFilename << std::endl;
     YAML::Node config = YAML::LoadFile(settingsFilename)["cam0"];
-    std::vector<std::vector<double> > theVector = config["T_cam_imu"].as<std::vector<std::vector<double> > >();
+    std::vector<std::vector<double>> theVector = config["T_cam_imu"].as<std::vector<std::vector<double>>>();
     Eigen::Matrix4d matrix;
-    for(int x = 0; x < 4; ++x)
+    for (int x = 0; x < 4; ++x)
     {
-        for(int y = 0; y < 4; ++y)
+        for (int y = 0; y < 4; ++y)
         {
             matrix(x, y) = theVector[x][y];
         }
@@ -85,25 +85,30 @@ void IMUCalibration::loadFromFile(std::string settingsFilename)
     std::cout << "Used T_cam_imu: " << std::endl << matrix << std::endl;
     T_cam_imu = Sophus::SE3d(matrix);
 
-    if(config["accelerometer_random_walk"] || config["gyroscope_random_walk"] || config["accelerometer_noise_density"]  ||
-    config["gyroscope_noise_density"])
+    if (config["accelerometer_random_walk"] || config["gyroscope_random_walk"] || config["accelerometer_noise_density"]
+        ||
+        config["gyroscope_noise_density"])
     {
         std::cout << "WARNING IMPORTANT: Passing IMU noise values via the IMU camchain.yaml file is not supported any"
-                     " more! Please pass them via the settings file or as a commandline parameter!" << std::endl;
+            " more! Please pass them via the settings file or as a commandline parameter!" << std::endl;
     }
 
     std::cout << "Used noise values: " << sigma_between_b_a << " " << sigma_between_b_g << " " << accel_sigma << " "
-              << gyro_sigma << std::endl;
+        << gyro_sigma << std::endl;
 }
 
 void IMUCalibration::saveToFile(std::string filename)
 {
     YAML::Node node;
     std::vector<std::vector<double>> vector(4, std::vector<double>(4, 0.0));
-    Eigen::Matrix4d matrix = T_cam_imu.matrix();
-    for(int x = 0; x < 4; ++x)
+    // Eigen::Matrix4d matrix = T_cam_imu.matrix();
+    // convert pangolin::OpenGlMatrix to Eigen::Matrix4d
+    Eigen::Matrix4d matrix;
+    matrix << T_cam_imu.rotationMatrix(), T_cam_imu.translation(),
+        0, 0, 0, 1;
+    for (int x = 0; x < 4; ++x)
     {
-        for(int y = 0; y < 4; ++y)
+        for (int y = 0; y < 4; ++y)
         {
             vector[x][y] = matrix(x, y);
         }
@@ -116,7 +121,8 @@ void IMUCalibration::saveToFile(std::string filename)
 }
 
 IMUCalibration::IMUCalibration(const Sophus::SE3d& tCamImu) : T_cam_imu(tCamImu)
-{}
+{
+}
 
 void IMUSettings::registerArgs(dmvio::SettingsUtil& set)
 {

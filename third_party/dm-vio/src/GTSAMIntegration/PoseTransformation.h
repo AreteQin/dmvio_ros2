@@ -253,7 +253,7 @@ computeNumericJacobian(PoseTransformation& transformation, const Sophus::SE3d& p
 
     // Numeric Jacobians work by slightly changing the pose in each direction, and then computing how much it effects the
     // converted pose.
-    dso::Mat44 transformedPose = transformation.transformPose(pose.matrix());
+    dso::Mat44 transformedPose = transformation.transformPose(PoseTransformation::PoseType(pose.matrix()));
     Sophus::SE3d transformedPoseInv = Sophus::SE3d(transformedPose).inverse();
     for(int i = 0; i < T::DoF; ++i)
     {
@@ -270,7 +270,7 @@ computeNumericJacobian(PoseTransformation& transformation, const Sophus::SE3d& p
             *variableToChange = T::exp(incVec) * *variableToChange;
         }
 
-        Sophus::SE3d transformedPoseNew(transformation.transformPose(pose.matrix()));
+        Sophus::SE3d transformedPoseNew(transformation.transformPose(PoseTransformation::PoseType(pose.matrix())));
         *variableToChange = variableBackup;
         Sophus::SE3d relPose;
         if(direction == dmvio::DerivativeDirection::LEFT_TO_LEFT ||
@@ -282,7 +282,8 @@ computeNumericJacobian(PoseTransformation& transformation, const Sophus::SE3d& p
             relPose = transformedPoseInv * transformedPoseNew;
         }
 
-        dso::Vec6 derivative = Sophus::SE3d::log(relPose);
+        // dso::Vec6 derivative = Sophus::SE3d::log(relPose);
+        dso::Vec6 derivative = relPose.log();
         fullDerivative.col(i) = derivative / epsilon;
     }
 

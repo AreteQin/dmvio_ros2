@@ -108,8 +108,8 @@ It includes
 
 and all fields in `transformDSOToIMU`, which enables you to convert the pose (and all published poses prior to this) to the metric frame:
 * `float64` scale
-* `geometry_msgs/Quaternion` rotationMetricToDSO: Gravity direction encoded as the rotation to convert from metric world to DSO world
-* `geometry_msgs/Pose` imuToCam: Transformation between camera and IMU
+* `geometry_msgs/Quaternion` rotation_metric_to_dso: Gravity direction encoded as the rotation to convert from metric world to DSO world
+* `geometry_msgs/Pose` imu_to_cam: Transformation between camera and IMU
 
 ### `dmvio/unscaled_pose`: PoseStamped
 This is just a copy of `/dmvio/frame_tracked/pose`. It can be useful for visualizing in Rviz as PoseStamped is a standard message.
