@@ -1,7 +1,5 @@
 <launch>
 
-  <node name="D435_publisher" pkg="dmvio_ros" type="D435_publisher"/>
-
   <node name="dmvio_node" pkg="dmvio_ros" type="dmvio_node" args="calib=$(find dmvio_ros)/D435.txt settingsFile=$(find dmvio_ros)/qcar.yaml mode=1 preset=1 useimu=1 quiet=1 init_requestFullResetNormalizedErrorThreshold=0.8 init_pgba_skipFirstKFs=1" output="screen" />
 
 <!--   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find imu_preintegration_ros)/rviz/imu_visualisation.rviz" /> -->

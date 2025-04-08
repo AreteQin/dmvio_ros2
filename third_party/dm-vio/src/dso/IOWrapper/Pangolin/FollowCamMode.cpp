@@ -43,7 +43,7 @@ FollowCamMode::updateVisualizationCam(const Sophus::SE3d& camToWorldIn, pangolin
     output.SetProjectionMatrix(renderStateIn.GetProjectionMatrix());
 
     auto&& modelViewIn = renderStateIn.GetModelViewMatrix();
-    Sophus::SE3d T_pcam_world(Eigen::Matrix4d(modelViewIn)); // world to Pangolin-Cam.
+    // Sophus::SE3d T_pcam_world(Eigen::Matrix4d(modelViewIn)); // world to Pangolin-Cam.
 
     Sophus::SE3d output_cam_w;
 

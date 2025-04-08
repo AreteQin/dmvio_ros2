@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8) # Recommended for ROS2
 project(dmvio_ros2)
 
-set(CMAKE_CXX_STANDARD 14) # Keep 14, or consider 17 if needed
+set(CMAKE_CXX_STANDARD 17) # Keep 14, or consider 17 if needed
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules) # Add elements to list
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -95,7 +95,6 @@ ament_export_dependencies(rosidl_default_runtime)
 
 # --- Executable: dmvio_node ---
 add_executable(dmvio_node src/main.cpp src/ROSOutputWrapper.cpp)
-#add_dependencies(dmvio_node ${PROJECT_NAME}_generate_messages_cpp)
 ament_target_dependencies(dmvio_node
         rclcpp
         cv_bridge
@@ -161,13 +160,17 @@ target_link_libraries(dmvio_node
 # --- Install Rules ---
 install(TARGETS
         dmvio_node
-        # D435_publisher # If enabled
         DESTINATION lib/${PROJECT_NAME}
 )
-
-install(DIRECTORY include/
-        DESTINATION include
+install(TARGETS dmvio
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
 )
+
+#install(DIRECTORY include/
+#        DESTINATION include
+#)
 
 # Install other resources like launch files, config files if added
 # install(DIRECTORY launch
@@ -176,6 +179,10 @@ install(DIRECTORY include/
 # install(DIRECTORY config
 #   DESTINATION share/${PROJECT_NAME}/config
 # )
+install(FILES package.xml
+        DESTINATION share/${PROJECT_NAME}
+)
+
 
 # --- Finalize ---
 ament_package() # Replaces catkin_package()

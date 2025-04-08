@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>ROS2 driver for DM-VIO: Delayed Marginalization Visual-Inertial Odometry</description>
 
-  <maintainer email="qinqiaomeng@outlook.com">Lukas von Stumberg</maintainer>
+  <maintainer email="qinqiaomeng@outlook.com">Qiaomeng Qin</maintainer>
   <license>GPLv3</license> <url type="website">https://vision.in.tum.de/dm-vio</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

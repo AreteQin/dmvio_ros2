@@ -1,5 +1,5 @@
 
-# ROS-Wrapper for DM-VIO: Delayed Marginalization Visual-Inertial Odometry
+# ROS2-Wrapper for DM-VIO: Delayed Marginalization Visual-Inertial Odometry
 
 For more information see https://vision.in.tum.de/dm-vio and https://github.com/lukasvst/dm-vio.
 
@@ -14,16 +14,6 @@ Alternatively, it can read images and IMU data directly from a rosbag dataset.
 * **[Direct Sparse Odometry](https://vision.in.tum.de/dso)**, *J. Engel, V. Koltun, D. Cremers*, In  TPAMI, vol. 40, 2018
 
 ### Installation
-First install DM-VIO as described [here](https://github.com/lukasvst/dm-vio) and make sure it works.
-This version of the ROS wrapper was tested with commit `d18fa15ba086043561361941b8e5298074b34b47` of DM-VIO.
-
-You need to set the environment variable `DMVIO_BUILD` to point to the folder where you built DM-VIO (which is expected to be 
-a direct subfolder of DM-VIO).
-The easiest way is to put the following into your `.bashrc`
-
-    export DMVIO_BUILD=/PATH/TO/dm-vio/cmake-build-relwithdebinfo
-
-Then you can clone this project into your workspace and build normally with `catkin_make`.
 
 ### Running
 
