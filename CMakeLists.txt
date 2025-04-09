@@ -121,16 +121,19 @@ target_include_directories(dmvio_node PUBLIC
         ${YAML_CPP_INCLUDE_DIRS}
         ${Pangolin_INCLUDE_DIRS}
 )
-# check ros2 version if it is humble
+
+# check ros2 version
 if(DEFINED ENV{ROS_DISTRO})
     message(STATUS "ROS2 Distribution: $ENV{ROS_DISTRO}")
 else()
     message(WARNING "ROS_DISTRO is not defined. Be sure to source your ROS2 setup file!")
 endif()
-
 IF ($ENV{ROS_DISTRO} STREQUAL "humble")
     rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
 ENDIF ()
+IF ($ENV{ROS_DISTRO} STREQUAL "foxy")
+    add_dependencies(dmvio_node ${PROJECT_NAME}__rosidl_generator_cpp)
+ENDIF()
 
 target_link_libraries(dmvio_node
         # Link against the DM-VIO library target
