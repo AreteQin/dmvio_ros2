@@ -89,6 +89,18 @@ rosidl_generate_interfaces(${PROJECT_NAME}
         "msg/DMVIOPoseMsg.msg"
         DEPENDENCIES geometry_msgs std_msgs # Add dependencies used within the msg file
 )
+# check ros2 version
+if(DEFINED ENV{ROS_DISTRO})
+    message(STATUS "ROS2 Distribution: $ENV{ROS_DISTRO}")
+else()
+    message(WARNING "ROS_DISTRO is not defined. Be sure to source your ROS2 setup file!")
+endif()
+IF ($ENV{ROS_DISTRO} STREQUAL "humble")
+    rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
+ENDIF ()
+#IF ($ENV{ROS_DISTRO} STREQUAL "foxy")
+#    add_dependencies(dmvio_node ${PROJECT_NAME}__rosidl_generator_cpp)
+#ENDIF()
 
 # Export dependencies for downstream packages.
 ament_export_dependencies(rosidl_default_runtime)
@@ -107,8 +119,14 @@ ament_target_dependencies(dmvio_node
         # Add ROS2 packages providing non-ament dependencies if available, e.g.
         # realsense2_camera # If using the ROS2 realsense node package
 )
+IF ($ENV{ROS_DISTRO} STREQUAL "foxy")
+    ament_target_dependencies(dmvio_node
+            ${PROJECT_NAME}__rosidl_generator_cpp
+    )
+ENDIF()
 target_include_directories(dmvio_node PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp/${PROJECT_NAME}>
+#        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp/${PROJECT_NAME}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp>
         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include> # For installation
@@ -121,19 +139,6 @@ target_include_directories(dmvio_node PUBLIC
         ${YAML_CPP_INCLUDE_DIRS}
         ${Pangolin_INCLUDE_DIRS}
 )
-
-# check ros2 version
-if(DEFINED ENV{ROS_DISTRO})
-    message(STATUS "ROS2 Distribution: $ENV{ROS_DISTRO}")
-else()
-    message(WARNING "ROS_DISTRO is not defined. Be sure to source your ROS2 setup file!")
-endif()
-IF ($ENV{ROS_DISTRO} STREQUAL "humble")
-    rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
-ENDIF ()
-IF ($ENV{ROS_DISTRO} STREQUAL "foxy")
-    add_dependencies(dmvio_node ${PROJECT_NAME}__rosidl_generator_cpp)
-ENDIF()
 
 target_link_libraries(dmvio_node
         # Link against the DM-VIO library target
