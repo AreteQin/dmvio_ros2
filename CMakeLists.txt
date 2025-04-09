@@ -120,9 +120,7 @@ ament_target_dependencies(dmvio_node
         # realsense2_camera # If using the ROS2 realsense node package
 )
 IF ($ENV{ROS_DISTRO} STREQUAL "foxy")
-    ament_target_dependencies(dmvio_node
-            ${PROJECT_NAME}__rosidl_generator_cpp
-    )
+    rosidl_target_interfaces(dmvio_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
 ENDIF()
 target_include_directories(dmvio_node PUBLIC
 #        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp/${PROJECT_NAME}>
