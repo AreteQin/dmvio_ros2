@@ -122,8 +122,9 @@ target_include_directories(dmvio_node PUBLIC
         ${Pangolin_INCLUDE_DIRS}
 )
 # check ros2 version if it is humble
-if(ROS_DISTRO STREQUAL "humble")
+IF (ROS_DISTRO STREQUAL "humble")
     rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
+ENDIF ()
 
 target_link_libraries(dmvio_node
         # Link against the DM-VIO library target
