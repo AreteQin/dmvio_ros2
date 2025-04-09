@@ -121,7 +121,10 @@ target_include_directories(dmvio_node PUBLIC
         ${YAML_CPP_INCLUDE_DIRS}
         ${Pangolin_INCLUDE_DIRS}
 )
-rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
+# check ros2 version if it is humble
+if(ROS_DISTRO STREQUAL "humble")
+    rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
+
 target_link_libraries(dmvio_node
         # Link against the DM-VIO library target
         ${DMVIO_LIBRARY_TARGET}
@@ -182,7 +185,6 @@ install(TARGETS dmvio
 install(FILES package.xml
         DESTINATION share/${PROJECT_NAME}
 )
-
 
 # --- Finalize ---
 ament_package() # Replaces catkin_package()

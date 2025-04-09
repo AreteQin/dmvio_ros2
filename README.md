@@ -14,6 +14,11 @@ Alternatively, it can read images and IMU data directly from a rosbag dataset.
 * **[Direct Sparse Odometry](https://vision.in.tum.de/dso)**, *J. Engel, V. Koltun, D. Cremers*, In  TPAMI, vol. 40, 2018
 
 ### Installation
+Pangolin
+
+Sophus
+
+gtsam
 
 ### Running
 
