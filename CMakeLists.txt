@@ -65,19 +65,19 @@ include_directories(
 
 # --- Compiler Flags ---
 # Keep these settings, they are general C++ flags
-add_definitions("-DENABLE_SSE")
-set(CMAKE_CXX_FLAGS
-        "${SSE_FLAGS}"
-)
-set(CMAKE_CXX_FLAGS_DEBUG
-        "-O2 -g -fno-omit-frame-pointer -DEIGEN_INITIALIZE_MATRICES_WITH_NAN -DDEBUG ${STACKTRACE_DEFINES}"
-)
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-        "-O3 -g -fno-omit-frame-pointer ${STACKTRACE_DEFINES}"
-)
-set(CMAKE_CXX_FLAGS_RELEASE
-        "-O3 -DNDEBUG"
-)
+#add_definitions("-DENABLE_SSE")
+#set(CMAKE_CXX_FLAGS
+#        "${SSE_FLAGS}"
+#)
+#set(CMAKE_CXX_FLAGS_DEBUG
+#        "-O2 -g -fno-omit-frame-pointer -DEIGEN_INITIALIZE_MATRICES_WITH_NAN -DDEBUG ${STACKTRACE_DEFINES}"
+#)
+#set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
+#        "-O3 -g -fno-omit-frame-pointer ${STACKTRACE_DEFINES}"
+#)
+#set(CMAKE_CXX_FLAGS_RELEASE
+#        "-O3 -DNDEBUG"
+#)
 IF (${Boost_VERSION} GREATER_EQUAL 106500)
     message(STATUS "Building with stacktrace support.")
     set(STACKTRACE_LIBRARIES dl)
