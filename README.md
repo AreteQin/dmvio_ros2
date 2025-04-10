@@ -1,6 +1,8 @@
 
 # ROS2-Wrapper for DM-VIO: Delayed Marginalization Visual-Inertial Odometry
 
+Tested on both ROS2 Humble and Foxy, Ubuntu 20.04 and 22.04, X86 and ARM64.
+
 For more information see https://vision.in.tum.de/dm-vio and https://github.com/lukasvst/dm-vio.
 
 This is a ROS-Wrapper for DM-VIO, inspired by the [ROS-Wrapper for DSO](https://github.com/JakobEngel/dso_ros).
