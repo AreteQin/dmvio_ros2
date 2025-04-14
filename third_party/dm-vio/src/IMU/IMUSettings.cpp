@@ -74,17 +74,27 @@ void IMUCalibration::loadFromFile(std::string settingsFilename)
     std::cout << "Loading IMU parameter file at: " << settingsFilename << std::endl;
     YAML::Node config = YAML::LoadFile(settingsFilename)["cam0"];
     std::vector<std::vector<double>> theVector = config["T_cam_imu"].as<std::vector<std::vector<double>>>();
+    // make sure the R is orthogonal
+    Eigen::Matrix3d R;
+    R << theVector[0][0], theVector[0][1], theVector[0][2],
+        theVector[1][0], theVector[1][1], theVector[1][2],
+        theVector[2][0], theVector[2][1], theVector[2][2];
+    Eigen::JacobiSVD<Eigen::MatrixXd> R_orthogonal(R, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    R = R_orthogonal.matrixU().inverse() * R_orthogonal.matrixV().transpose().inverse();
     Eigen::Matrix4d matrix;
-    for (int x = 0; x < 4; ++x)
-    {
-        for (int y = 0; y < 4; ++y)
-        {
-            matrix(x, y) = theVector[x][y];
-        }
-    }
+    matrix << R(0, 0), R(0, 1), R(0, 2), theVector[0][3],
+        R(1, 0), R(1, 1), R(1, 2), theVector[1][3],
+        R(2, 0), R(2, 1), R(2, 2), theVector[2][3],
+        0, 0, 0, 1;
+    // for (int x = 0; x < 4; ++x)
+    // {
+    //     for (int y = 0; y < 4; ++y)
+    //     {
+    //         matrix(x, y) = theVector[x][y];
+    //     }
+    // }
     std::cout << "Used T_cam_imu: " << std::endl << matrix << std::endl;
     T_cam_imu = Sophus::SE3d(matrix);
-
     if (config["accelerometer_random_walk"] || config["gyroscope_random_walk"] || config["accelerometer_noise_density"]
         ||
         config["gyroscope_noise_density"])
